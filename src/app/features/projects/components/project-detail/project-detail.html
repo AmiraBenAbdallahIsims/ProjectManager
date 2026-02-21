@@ -1,0 +1,16 @@
+<div *ngIf="project" class="bg-white p-6 rounded-xl shadow-md">
+  <h2 class="text-xl font-bold mb-2">{{ project.name }}</h2>
+  <p><strong>Client:</strong> {{ project.client }}</p>
+  <p><strong>Manager:</strong> {{ project.manager }}</p>
+  <p><strong>Description:</strong> {{ project.description }}</p>
+  <p><strong>Budget:</strong> {{ project.budget }} TND</p>
+  <p><strong>Progression:</strong> {{ project.progress }}%</p>
+  <p><strong>Status:</strong> {{ project.status }}</p>
+
+  <h3 class="mt-4 font-bold">Tâches :</h3>
+  <ul>
+    <li *ngFor="let task of project.tasks">
+      {{ task.title }} - {{ task.status }} - {{ task.priority }}
+    </li>
+  </ul>
+</div>

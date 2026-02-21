@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Task, TaskList } from '../task-list/task-list';
 import { CommonModule } from '@angular/common';
+import { ProjectDetail } from '../project-detail/project-detail';
+import { FormsModule } from '@angular/forms';
 export type ProjectStatus = 'Planning' | 'En cours' | 'En revue' | 'Terminé';
 export type Priority = 'Basse' | 'Moyenne' | 'Haute' | 'Critique';
 
@@ -21,12 +23,12 @@ export interface Project {
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule,TaskList],
+  imports: [CommonModule,TaskList,ProjectDetail,FormsModule],
   templateUrl: './project-list.html',
   styleUrl: './project-list.css',
 })
 export class ProjectList {
- Project : Project[] = [
+ project: Project[] = [
     {
       id: 'PRJ-001',
       name: 'Plateforme E-commerce',
@@ -91,5 +93,23 @@ export class ProjectList {
       ]
     }
   ];
+   selectedProject: Project | null = null;
+   isModalOpen: boolean = false;
+   searchTerm: string = '';
+
+  selectProject(project: Project) {
+    this.selectedProject = project;
+    this.isModalOpen = true;
 
 }
+// Getter pour les projets filtrés
+  get filteredProjects(): Project[] {
+    if (!this.searchTerm) return this.project;
+    return this.project.filter(p =>
+      p.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+closeModal() {
+  this.isModalOpen = false;
+  this.selectedProject = null;
+}}
