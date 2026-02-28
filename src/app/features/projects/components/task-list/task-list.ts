@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { HighlightStatus } from './highlight-status';
+import { PriorityColorPipe } from './priority-color-pipe';
 
 export interface Task {
   id: string;
@@ -16,7 +18,7 @@ export interface Task {
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,HighlightStatus, PriorityColorPipe],
   templateUrl: './task-list.html'
 })
 export class TaskList {

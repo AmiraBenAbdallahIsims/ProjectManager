@@ -5,24 +5,27 @@
   <div class="mb-6">
     <h1 class="text-3xl font-bold text-slate-900">Gestion des Projets</h1>
     <p class="text-slate-600 mt-1">Vue d'ensemble de vos projets</p>
-
   </div>
+
+  <!-- Barre de recherche -->
   <div class="mb-6">
-  <input
-    type="text"
-    [(ngModel)]="searchTerm"
-    placeholder="Rechercher un projet"
-    class="w-full p-2 rounded-lg border border-gray-300"
-  />
-</div>
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Rechercher un projet"
+      class="w-full p-2 rounded-lg border border-gray-300"
+    />
+  </div>
 
-  <!-- Grille des projets -->
-  <div class="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
+  <!-- Grille des projets avec condition -->
+  <div *ngIf="filteredProjects.length > 0; else noProject">
 
-   <div
-    *ngFor="let project of filteredProjects"
-    class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-200 overflow-hidden flex flex-col"
-  >
+    <div class="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
+
+      <div
+        *ngFor="let project of filteredProjects"
+        class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-200 overflow-hidden flex flex-col"
+      >
         <!-- En-tête du projet -->
         <div class="p-5 bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white">
           <div class="flex items-start justify-between gap-3 mb-3">
@@ -50,7 +53,7 @@
             </span>
           </div>
 
-          <!-- Barre de progression dans l'en-tête -->
+          <!-- Barre de progression -->
           <div class="mt-4">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-semibold text-blue-100">Progression</span>
@@ -81,45 +84,59 @@
           </div>
         </div>
 
-        <!-- Liste des tâches compacte -->
+        <!-- Liste des tâches compacte avec affichage conditionnel "Aucune tâche" -->
         <div class="p-5 flex-1">
-  <div class="flex items-center gap-2 mb-3">
-    <div class="w-1 h-4 rounded-full bg-indigo-600"></div>
-    <h3 class="text-sm font-bold text-slate-900">Tâches du projet</h3>
-  </div>
-  <app-task-list [tasks]="project.tasks"></app-task-list>
-</div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-1 h-4 rounded-full bg-indigo-600"></div>
+            <h3 class="text-sm font-bold text-slate-900">Tâches du projet</h3>
+          </div>
+          <app-task-list [tasks]="project.tasks"></app-task-list>
+        </div>
+
+        <!-- Bouton voir détails -->
         <div class="px-5 pb-5">
-  <button
-    class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
-    (click)="selectProject(project)">
-    Voir détails
-  </button>
-</div>
+          <button
+            class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+            (click)="selectProject(project)">
+            Voir détails
+          </button>
+        </div>
 
       </div>
 
-
-
-
+    </div>
 
   </div>
- <!-- Modal -->
+
+  <!-- Template si aucun projet -->
+  <ng-template #noProject>
+    <div class="text-center py-12">
+      <h2 class="text-xl font-semibold text-slate-600">
+        Aucun projet trouvé
+      </h2>
+      <p class="text-slate-400 mt-2">
+        Essayez un autre mot-clé dans la recherche.
+      </p>
+    </div>
+  </ng-template>
+
+  <!-- Modal détails projet -->
 <div
   *ngIf="isModalOpen && selectedProject"
-  class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+  (click)="closeModal()"
 >
-  <div class="bg-white rounded-xl shadow-lg w-11/12 max-w-2xl p-6 relative">
-    <!-- Bouton fermer -->
+  <div (click)="$event.stopPropagation()" class="w-full max-w-2xl relative">
+    <app-project-detail [project]="selectedProject"></app-project-detail>
+
     <button
-      class="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+      class="absolute top-5 right-5 z-20 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-500 hover:text-gray-700 flex items-center justify-center transition-all duration-200"
       (click)="closeModal()"
     >
-      ✕
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
     </button>
-
-    <!-- Contenu du projet -->
-    <app-project-detail [project]="selectedProject"></app-project-detail>
   </div>
 </div>
 
